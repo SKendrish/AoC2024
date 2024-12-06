@@ -20,7 +20,5 @@ for list in data:
     inc = 0
     dec = 0
        
-
-
 print(ans)
 f.close()
