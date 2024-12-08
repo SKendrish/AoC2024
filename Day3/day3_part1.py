@@ -7,10 +7,10 @@ with open('input.txt', 'r') as f:
 
     ans = 0
 
-    matches = pattern.finditer(data)
+    matches = pattern.findall(data)
 
     for match in matches:
-         ans += int(match.group(1))*int(match.group(2))
+         ans += int(match[0])*int(match[1])
 
     print(ans)
         
