@@ -1,3 +1,6 @@
+import numpy as np
+
+
 f = open("input.txt", "r")
 
 def conv_to_numlist(x):
@@ -10,38 +13,40 @@ def conv_to_numlist(x):
 
     return num_list
 
+data = f.readlines()
 
-reports = f.readlines()
+numlist = conv_to_numlist(data)
+example = [[7, 6, 4, 2, 1],
+           [1, 2, 7, 8, 9],
+           [9, 7, 6, 2, 1],
+           [1, 3, 2, 4, 5],
+           [8, 6, 4, 4, 1],
+           [1, 3, 6, 7, 9]]
+def isSafe(report):
+    if len(report) <= 1:
+        return True
+    diffs = np.diff(report)
+    isAsc = np.all(diffs >= 1) and np.all(diffs <= 3)
+    isDesc = np.all(diffs >= -3) and np.all(diffs <= -1)
+    if isAsc or isDesc:
+        return True
+    else:
+        return False
+                
+def numSafeReports(reports):
+    return sum(isSafe(report) for report in reports)
 
-numlist = conv_to_numlist(reports)
-badReports = []
-def isSafe(list):
-    inc = 0
-    dec = 0
-    lenList = len(list)
-    safe = False
-    for i in range(0, lenList - 1):
-        first = list[i]
-        second = list[i+1]
-        lenList = len(list)
-        #increasing
-        if first < second and abs(first-second) <= 3 and first != second:
-            inc += 1
-        #decreasing
-        if first > second and abs(first-second) <= 3 and first != second:
-            dec += 1
-        if inc == lenList - 1 or dec == lenList - 1:
-            safe = True
-    return safe
-def numSafeReports(data):
-    ans = 0
-    for list in data:
-        if isSafe(list):
-            ans += 1
-        if not isSafe(list):
-            
-    return ans
+def checkBadReports(report):
+    if not isSafe(report):
+        for level in range(len(report)):
+            if isSafe(np.delete(report, [level])):
+                return True
+        return False
+    return isSafe(report)
 
-print(numSafeReports(numlist))
+def numSafeReports2(reports):
+    return sum(checkBadReports(report) for report in reports)
+
+print(numSafeReports2(numlist))
 
 f.close()
