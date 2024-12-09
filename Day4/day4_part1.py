@@ -1,61 +1,25 @@
 import numpy as np
+from collections import defaultdict
 
-def createNPArray(file):
-    arr = []
-    for line in data:
-        temp = []
-        for char in line:
-            if char != "\n":
-                temp.append(char)
-        arr.append(temp)
-    
-    nparr = np.array(arr)
-    return nparr
+dirs = [(-1,-1), (-1,0), (-1, 1), (0,-1), (0,1), (1,-1), (1,0), (1,1)]
 
-def createPoses(array, str):
-    poses = np.where(array == str)
-
-    Poses = []
-
-    for i in range(len(poses[0])):
-        row = int(poses[0][i])
-        column = int(poses[1][i])
-        mytuple = (row, column)
-        Poses.append(mytuple)
-
-    return Poses
-        
-def replaceElements(array, poses, str):
-    for tuple in poses:
-        array[tuple[0]][tuple[1]] = str
-
-    return array
-
-
-with open('example.txt', 'r') as f:
+with open('input.txt', 'r') as f:
     data = f.readlines()
+    keyword = 'XMAS'
+    count = 0
 
-    npArray = createNPArray(data)
+    char_map = defaultdict(set)
 
-    XPoses = createPoses(npArray, "X")
-    MPoses = createPoses(npArray, "M")
-    APoses = createPoses(npArray, "A")
-    SPoses = createPoses(npArray, "S")
+    for r, row in enumerate(data):
+        for c, val in enumerate(row):
+            char_map[val].add((r,c))
 
-    a = np.zeros((10,10), dtype=str)
-
-    a = replaceElements(a, XPoses, 'X')
-    a = replaceElements(a, MPoses, 'M')
-    a = replaceElements(a, APoses, 'A')
-    a = replaceElements(a, SPoses, 'S')
-
-    print(a)
-
-
-
-
+    for r,c in char_map["X"]:
+        for dr, dc in dirs:
+            for i, char in enumerate(keyword[1:], 1):
+                if (r + (dr*i), c + (dc*i)) not in char_map[char]:
+                    break
+            else:
+                count+=1
     
-
-        
-    
-    
+    print(count)
